@@ -1,10 +1,11 @@
+
 # Configuration Reference
 
 Complete examples for multi-agent OpenClaw setup.
 
 ## openclaw.json — Agents List
 
-Add both agents to the `agents` array:
+Add both agents to the `agents` array. Choose either **OpenRouter (Option A)** or **Local Ollama (Option B)** for your second agent.
 
 ```json
 {
@@ -36,6 +37,72 @@ Add both agents to the `agents` array:
   }
 }
 ```
+
+### Option A: OpenRouter (Free, Cloud-Based)
+
+The example above shows the OpenRouter approach. The free agent uses `openrouter/nvidia/nemotron-3-super-120b-a12b:free` as its primary model.
+
+**Requirements:**
+
+- OpenRouter API key in `auth-profiles.json`
+- Internet connection
+- Models are served by OpenRouter (no local compute)
+
+### Option B: Local Ollama (Free, Hybrid - Cloud Fallback)
+
+Replace the free agent block with an Ollama-based agent. This hybrid setup uses local Ollama as primary with OpenRouter cloud fallback and heartbeat for reliability.
+
+```json
+{
+  "id": "ayo",
+  "name": "Ayo",
+  "workspace": "/Users/YOUR_USERNAME/.openclaw/workspace-ayo",
+  "agentDir": "/Users/YOUR_USERNAME/.openclaw/agents/ayo/agent",
+  "model": {
+    "primary": "ollama/gemma4:26b",
+    "fallbacks": [
+      "openrouter/free"
+    ]
+  },
+  "heartbeat": {
+    "every": "1h",
+    "model": "openrouter/free"
+  }
+}
+```
+
+**Requirements:**
+
+- Ollama installed and running (`ollama serve`)
+- Model pulled locally (`ollama pull gemma4:26b`)
+- No API key or authentication file needed for Ollama itself
+- ⚠️ OpenRouter fallback routes traffic to cloud when Ollama is unavailable
+
+**For fully offline operation**, use this config instead:
+
+```json
+{
+  "id": "ayo",
+  "name": "Ayo",
+  "workspace": "/Users/YOUR_USERNAME/.openclaw/workspace-ayo",
+  "agentDir": "/Users/YOUR_USERNAME/.openclaw/agents/ayo/agent",
+  "model": {
+    "primary": "ollama/gemma4:26b",
+    "fallbacks": []
+  },
+  "heartbeat": {
+    "every": "1h",
+    "model": "ollama/gemma4:26b"
+  }
+}
+```
+
+**Popular Ollama models:**
+
+- `ollama/gemma4:26b` — balanced (17GB) ⭐ recommended
+- `ollama/llama3.3:70b` — very capable (43GB)
+- `ollama/qwen2.5:32b` — strong coder (20GB)
+- `ollama/mistral:7b` — lightweight (4GB)
 
 ## openclaw.json — Bindings
 
@@ -87,6 +154,8 @@ Add both bot tokens under `channels.telegram.accounts`:
 
 ## auth-profiles.json — OpenRouter Authentication
 
+**Only needed for OpenRouter agents.** Skip this if using local Ollama.
+
 Place in the free agent's agentDir: `/Users/YOUR_USERNAME/.openclaw/agents/free-agent/agent/auth-profiles.json`
 
 ```json
@@ -105,7 +174,11 @@ Place in the free agent's agentDir: `/Users/YOUR_USERNAME/.openclaw/agents/free-
 }
 ```
 
+**For Ollama agents:** No `auth-profiles.json` is needed. Ollama runs locally with zero authentication.
+
 ## models.json — OpenRouter Provider (Free Agent)
+
+**Only needed for OpenRouter agents.** Skip this if using local Ollama.
 
 Place at `/Users/YOUR_USERNAME/.openclaw/agents/free-agent/agent/models.json`:
 
@@ -152,6 +225,8 @@ Place at `/Users/YOUR_USERNAME/.openclaw/agents/free-agent/agent/models.json`:
 ```
 
 > Do NOT add an `anthropic` provider block here — OpenClaw registers Anthropic internally. Adding it manually causes `No API provider registered for api: anthropic`.
+
+**For Ollama agents:** OpenClaw automatically handles Ollama provider configuration. No `models.json` needed.
 
 ## Getting Chat IDs
 
