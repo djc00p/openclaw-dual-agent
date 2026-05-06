@@ -15,6 +15,7 @@ node --version  # Verify it shows v22.x.x
 ```
 
 Then restart OpenClaw:
+
 ```bash
 openclaw restart
 ```
@@ -36,6 +37,7 @@ nano ~/.openclaw/agents/free-agent/agent/models.json
 ```
 
 Then restart:
+
 ```bash
 openclaw restart
 ```
@@ -47,11 +49,13 @@ openclaw restart
 **Fix:** Use correct format: `provider/modelid`
 
 **Wrong:**
+
 ```json
 "model": { "primary": "/path/to/claude.json" }
 ```
 
 **Correct:**
+
 ```json
 "model": { "primary": "anthropic/claude-sonnet-4-6" }
 ```
@@ -72,6 +76,7 @@ openclaw restart
 ```
 
 Also clear old sessions:
+
 ```bash
 openclaw sessions cleanup \
   --store /Users/YOUR_USERNAME/.openclaw/agents/main/store \
@@ -106,6 +111,7 @@ EOF
 ```
 
 Then restart:
+
 ```bash
 openclaw restart
 ```
@@ -114,13 +120,16 @@ openclaw restart
 
 **Cause:** Account hit usage limits or API key was revoked.
 
-**Fix:** 
-1. Check balance at https://console.anthropic.com/account/billing/overview
+**Fix:**
+
+1. Check balance at <https://console.anthropic.com/account/billing/overview>
 2. Top up your account if needed
 3. Verify API key is valid and still active
 4. Re-authenticate if key changed:
+
    ```bash
-   openclaw onboard --anthropic-api-key "$NEW_KEY"
+   # Use interactive onboard (never pass keys on CLI):
+   openclaw onboard
    ```
 
 ## Runtime Errors
@@ -138,6 +147,7 @@ grep -r "/home/olduser" ~/.openclaw/
 ```
 
 Common locations:
+
 - `~/.openclaw/openclaw.json` (agentDir, workspace paths)
 - `~/.openclaw/agents/*/agent/models.json`
 - `~/.openclaw/agents/*/agent/auth-profiles.json`
@@ -153,33 +163,38 @@ openclaw doctor
 # Verify both agents are registered
 grep -A 2 '"id"' ~/.openclaw/openclaw.json | grep -E 'id|name'
 
-# Test Anthropic auth
-curl -H "Authorization: Bearer $ANTHROPIC_API_KEY" \
-  https://api.anthropic.com/v1/models
+# Test Anthropic auth (uses env var, no key in command)
+curl -s https://api.anthropic.com/v1/models \
+  -H "x-api-key: $ANTHROPIC_API_KEY" \
+  -H "anthropic-version: 2023-06-01"
 
-# Test OpenRouter auth (from free agent agentDir)
-curl -H "Authorization: Bearer sk-or-v1-YOUR_KEY" \
-  https://openrouter.ai/api/v1/models
+# Test OpenRouter auth (uses env var or interactive)
+# Do NOT paste real keys into curl commands — use env vars
+openclaw doctor
 ```
 
 ## Debugging Tips
 
 **Enable verbose logging:**
+
 ```bash
 DEBUG=* openclaw start
 ```
 
 **Inspect active sessions:**
+
 ```bash
 ls -la ~/.openclaw/agents/*/store/sessions/
 ```
 
 **Check recent logs:**
+
 ```bash
 tail -100f ~/.openclaw/logs/agent.log
 ```
 
 **Validate JSON syntax:**
+
 ```bash
 jq . ~/.openclaw/openclaw.json
 jq . ~/.openclaw/agents/free-agent/agent/auth-profiles.json
