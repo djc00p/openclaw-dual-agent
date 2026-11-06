@@ -43,7 +43,6 @@ Add both agents to the `agents` array. Choose either **OpenRouter (Option A)** o
 The example above shows the OpenRouter approach. The free agent uses `openrouter/nvidia/nemotron-3-super-120b-a12b:free` as its primary model.
 
 **Requirements:**
-
 - OpenRouter API key in `auth-profiles.json`
 - Internet connection
 - Models are served by OpenRouter (no local compute)
@@ -72,7 +71,6 @@ Replace the free agent block with an Ollama-based agent. This hybrid setup uses 
 ```
 
 **Requirements:**
-
 - Ollama installed and running (`ollama serve`)
 - Model pulled locally (`ollama pull gemma4:26b`)
 - No API key or authentication file needed for Ollama itself
@@ -98,7 +96,6 @@ Replace the free agent block with an Ollama-based agent. This hybrid setup uses 
 ```
 
 **Popular Ollama models:**
-
 - `ollama/gemma4:26b` — balanced (17GB) ⭐ recommended
 - `ollama/llama3.3:70b` — very capable (43GB)
 - `ollama/qwen2.5:32b` — strong coder (20GB)

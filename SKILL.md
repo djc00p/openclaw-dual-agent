@@ -1,9 +1,10 @@
-
 ---
+
 name: openclaw-dual-agent
 description: "Run two OpenClaw agents simultaneously — a paid Anthropic agent and a free agent using either OpenRouter (cloud) or local Ollama models. Note: Ollama example defaults to hybrid setup with OpenRouter fallback — remove fallback/heartbeat refs for fully offline operation. Trigger phrases: multi-agent setup, add a second agent, free agent openclaw, run two agents, openrouter openclaw, ollama agent, local model openclaw, parallel agents, cost optimization agent."
-metadata: {"clawdbot": {"emoji": "🤖", "requires": {"bins": ["jq"]}, "env": ["ANTHROPIC_API_KEY"], "os": ["darwin", "linux", "win32"]}, "homepage": "https://clawhub.com/djc00p/openclaw-dual-agent"}
+metadata: {"clawdbot":{"emoji":"\ud83e\udd16","requires":{"bins":["jq"]},"env":["ANTHROPIC_API_KEY"],"os":["darwin","linux","win32"],"version":"1.1.3"},"homepage":"https://clawhub.com/djc00p/openclaw-dual-agent"}
 ---
+
 
 # Multi-Agent OpenClaw Setup
 
